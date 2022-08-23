@@ -13,6 +13,7 @@ const database = require("./database");
     });
 };*/
 
+//Express 06
 const getUsers = (req, res) => {
   let initialSql = "select * from users";
   const sqlValues = [];
