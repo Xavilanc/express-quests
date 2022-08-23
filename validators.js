@@ -54,7 +54,7 @@ const validateUser = [
   body("lastname").isLength({ max: 255 }).isString().notEmpty(),
   body("city").isLength({ max: 255 }).isString(),
   body("language").isLength({ max: 255 }).isString(),
-  check("email").trim().normalizeEmail().isEmail().isString().withMessage("Invalid email").isLength({ max: 255 }).custom(async email => {
+  check("email").trim().normalizeEmail().isEmail().withMessage("Invalid email").isLength({ max: 255 }).custom(async email => {
     const value = await isEmailInUse(email);
     if (value) {
         throw new Error('Email is already exists!!!');
@@ -78,7 +78,7 @@ const validateUserId = [
   body("lastname").isLength({ max: 255 }).isString().notEmpty(),
   body("city").isLength({ max: 255 }).isString(),
   body("language").isLength({ max: 255 }).isString(),
-  check("email").trim().normalizeEmail().isEmail().isString().withMessage("Invalid email").isLength({ max: 255 }),
+  body("email").isLength({ max: 255 }).isEmail(),
 ];
 
 module.exports = {
