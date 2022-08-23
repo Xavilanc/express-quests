@@ -1,5 +1,6 @@
 const database = require("./database");
 
+// Express 02
 const getUsers = (req, res) => {
     database
     .query("select * from users")
@@ -30,6 +31,7 @@ const getUsersById = (req, res) => {
       });
   };
 
+  //Express 03
   const postUsers = (req, res) => {
     const { firstname, lastname, email, city, language } = req.body;
 
@@ -48,6 +50,7 @@ const getUsersById = (req, res) => {
         });
 }
 
+//Express 04
 const putUsers = (req, res) => {
   const { firstname, lastname, email, city, language } = req.body;
   const id = parseInt(req.params.id);
