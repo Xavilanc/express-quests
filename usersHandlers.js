@@ -1,7 +1,7 @@
 const database = require("./database");
 
 // Express 02
-const getUsers = (req, res) => {
+/*const getUsers = (req, res) => {
     database
     .query("select * from users")
     .then(([users]) => {
@@ -10,6 +10,43 @@ const getUsers = (req, res) => {
     .catch((err) => {
         console.error(err);
         res.status(500).send("Error retrieving data from database");
+    });
+};*/
+
+const getUsers = (req, res) => {
+  let initialSql = "select * from users";
+  const sqlValues = [];
+
+  if (req.query.language != null) {
+    sqlValues.push({
+      column: "language",
+      value: req.query.language,
+      operator: "=",
+    });
+  }
+  if (req.query.city != null) {
+    sqlValues.push({
+      column: "city",
+      value: req.query.city,
+      operator: "=",
+    });
+  }
+
+  database
+  .query(
+    sqlValues.reduce(
+      (sql, { column, operator }, index) =>
+        `${sql} ${index === 0 ? "where" : "and"} ${column} ${operator} ?`,
+      initialSql
+    ),
+    sqlValues.map(({ value }) => value)
+  )
+    .then(([users]) => {
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error retrieving data from database");
     });
 };
 
