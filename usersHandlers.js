@@ -1,4 +1,4 @@
-const database = require("./databaseQuest");
+const database = require("./database");
 
 const getUsers = (req, res) => {
     database
