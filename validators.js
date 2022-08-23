@@ -1,6 +1,7 @@
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, check } = require('express-validator');
+const db = require("./database");
 
-const validateMovie = (req, res, next) => {
+/*const validateMovie = (req, res, next) => {
   const { title, director, year, color, duration } = req.body;
     const errors = [];
 
@@ -27,14 +28,15 @@ const validateMovie = (req, res, next) => {
   } else {
     next();
   }
-}
+}*/
 
-const validateUser = [
-  body("firstname").isLength({ max: 2 }).notEmpty(),
-  body("lastname").isLength({ max: 255 }).notEmpty(),
-  body("email").isEmail().isLength({ max: 255 }),
-  body("city").isLength({ max: 255 }),
-  body("language").isLength({ max: 255 }),
+//Validation POST et PUT pour movies
+const validateMovie = [
+  body("title").isLength({ max: 255 }).notEmpty().isString(),
+  body("director").isLength({ max: 255 }).notEmpty().isString(),
+  body("year").isLength({ max: 255 }).notEmpty().isString(),
+  body("color").isLength({ max: 255 }).notEmpty().isString(),
+  body("duration").isLength({ max: 255 }).isInt(),
   (req, res, next) => {
     const errors = validationResult(req);
 
@@ -46,7 +48,41 @@ const validateUser = [
   },
 ];
 
+// Validation POST user (avec vérification email unique)
+const validateUser = [
+  body("firstname").isLength({ max: 255 }).isString().notEmpty(),
+  body("lastname").isLength({ max: 255 }).isString().notEmpty(),
+  body("city").isLength({ max: 255 }).isString(),
+  body("language").isLength({ max: 255 }).isString(),
+  check("email").trim().normalizeEmail().isEmail().isString().withMessage("Invalid email").isLength({ max: 255 }).custom(async email => {
+    const value = await isEmailInUse(email);
+    if (value) {
+        throw new Error('Email is already exists!!!');
+    }
+})
+.withMessage('Email is already exists!!!'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(422).json({ validationErrors: errors.array() });
+    } else {
+      next();
+    }
+  },
+];
+
+// validation PUT user
+const validateUserId = [
+  body("firstname").isLength({ max: 255 }).isString().notEmpty(),
+  body("lastname").isLength({ max: 255 }).isString().notEmpty(),
+  body("city").isLength({ max: 255 }).isString(),
+  body("language").isLength({ max: 255 }).isString(),
+  check("email").trim().normalizeEmail().isEmail().isString().withMessage("Invalid email").isLength({ max: 255 }),
+];
+
 module.exports = {
   validateMovie,
   validateUser,
+  validateUserId,
 };

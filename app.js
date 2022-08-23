@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 
-const { validateMovie, validateUser } = require("./validators.js");
+const { validateMovie, validateUser, validateUserId } = require("./validators.js");
 
 const app = express();
 
@@ -30,8 +30,8 @@ app.post("/api/movies", validateMovie, movieHandlers.postMovie);
 app.post("/api/users", validateUser, usersHandlers.postUsers);
 
 // PUT - Express 04
-app.put("/api/movies/:id", movieHandlers.putMovie);
-app.put("/api/users/:id", usersHandlers.putUsers);
+app.put("/api/movies/:id", validateMovie, movieHandlers.putMovie);
+app.put("/api/users/:id", validateUserId, usersHandlers.putUsers);
 
 //DELETE - Express 05
 app.delete("/api/movies/:id", movieHandlers.deleteMovie);
