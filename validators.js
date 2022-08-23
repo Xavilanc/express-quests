@@ -79,6 +79,15 @@ const validateUserId = [
   body("city").isLength({ max: 255 }).isString(),
   body("language").isLength({ max: 255 }).isString(),
   body("email").isLength({ max: 255 }).isEmail(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(422).json({ validationErrors: errors.array() });
+    } else {
+      next();
+    }
+  },
 ];
 
 module.exports = {
