@@ -31,7 +31,7 @@ const getMovies = (req, res) => {
   database
     .query("select * from movies")
     .then(([movies]) => {
-      res.send(200).json(movies);
+      res.status(200).json(movies);
     })
     .catch((err) => {
       console.error(err);
