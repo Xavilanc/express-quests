@@ -4,6 +4,8 @@ const express = require("express");
 
 const { validateMovie, validateUser, validateUserId } = require("./validators.js");
 
+const { hashPassword } = require("./auth.js");
+
 const app = express();
 
 app.use(express.json());
@@ -27,7 +29,7 @@ app.get("/api/users/:id", usersHandlers.getUsersById);
 
 // POST - Express 03
 app.post("/api/movies", validateMovie, movieHandlers.postMovie);
-app.post("/api/users", validateUser, usersHandlers.postUsers);
+app.post("/api/users", hashPassword, usersHandlers.postUsers);
 
 // PUT - Express 04
 app.put("/api/movies/:id", validateMovie, movieHandlers.putMovie);

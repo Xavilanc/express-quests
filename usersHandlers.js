@@ -15,7 +15,7 @@ const database = require("./database");
 
 //Express 06
 const getUsers = (req, res) => {
-  let initialSql = "select * from users";
+  let initialSql = "select firstname, lastname, email, city, language from users";
   const sqlValues = [];
 
   if (req.query.language != null) {
@@ -55,10 +55,10 @@ const getUsersById = (req, res) => {
     const id = parseInt(req.params.id);
   
     database
-      .query("select * from users where id = ?", [id])
+      .query("select firstname, lastname, email, city, language from users where id = ?", [id])
       .then(([users]) => {
-        if (users[0] != null) {
-          res.json(users[0]).status(200);
+        if ([users] != null) {
+          res.json([users]).sendStatus(200);
         } else {
           res.status(404).send("Not Found");
         }
@@ -71,12 +71,12 @@ const getUsersById = (req, res) => {
 
   //Express 03
   const postUsers = (req, res) => {
-    const { firstname, lastname, email, city, language } = req.body;
+    const { firstname, lastname, email, city, language, hashedPassword } = req.body;
 
     database
         .query(
-            "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
-            [firstname, lastname, email, city, language]
+            "INSERT INTO users(firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)",
+            [firstname, lastname, email, city, language, hashedPassword]
         )
         .then(([result]) => {
             res.location(`/api/users/${result.insertId}`);
