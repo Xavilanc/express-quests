@@ -69,7 +69,6 @@ const getUsersById = (req, res) => {
       });
   };
 
-  
   //Express 08
   const getUserByEmailWithPasswordAndPassToNext = (req, res, next) => {
     const { email } = req.body;
