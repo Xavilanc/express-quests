@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 
-const { validateMovie, validateUser, validateUserId } = require("./validators.js");
+const { validateMovie } = require("./validators.js");
 
 const { hashPassword, verifyPassword, verifyToken } = require("./auth.js");
 

@@ -28,7 +28,6 @@
 const database = require("./database");
 
 const getMovies = (req, res) => {
-  console.log("test");
   let sql = "select * from movies";
   const sqlValues = [];
 

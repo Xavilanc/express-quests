@@ -58,7 +58,7 @@ const getUsersById = (req, res) => {
       .query("select id, firstname, lastname, email, city, language from users where id = ?", [id])
       .then(([users]) => {
         if ([users] != null) {
-          res.json([users]).sendStatus(200);
+          res.json([users]).status(200);
         } else {
           res.status(404).send("Not Found");
         }
@@ -113,6 +113,9 @@ const getUsersById = (req, res) => {
 const putUsers = (req, res) => {
   const { firstname, lastname, email, city, language } = req.body;
   const id = parseInt(req.params.id);
+  if (id !== req.payload.sub) {
+    return res.sendStatus(403);
+  }
 
   database
       .query(
@@ -122,8 +125,6 @@ const putUsers = (req, res) => {
       .then(([result]) => {
           if (result.affectedRows === 0) {
             res.status(404).send("Not Found");
-          } else if (id !== req.payload.sub) {
-            res.statut(403).send("Forbidden")
           } else {
             res.sendStatus(204);
           }
@@ -138,13 +139,15 @@ const putUsers = (req, res) => {
 const deleteUser = (req, res) => {
   const id = parseInt(req.params.id);
 
+  if (id !== req.payload.sub) {
+    return res.sendStatus(403);
+  }
+
  database
     .query("delete from users where id = ?", [id])
     .then(([result]) => {
       if (result.affectedRows === 0) {
         res.status(404).send("Not Found");
-      } else if (id !== req.payload.sub) {
-        res.statut(403).send("Forbidden")
       } else {
         res.sendStatus(204);
       }
